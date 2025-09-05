@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Combo Aleatório</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: #f7f7f7;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 500px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    img {
+      width: 50%;
+      border-radius: 10px;
+    }
+    h2 {
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍴 Combo Aleatório</h1>
+  <div id="meal" class="card"></div>
+  <div id="drink" class="card"></div>
+  <button onclick="getCombo()">Gerar Novo Combo</button>
+
+  <script>
+    async function getCombo() {
+      try {
+        const res = await fetch("http://localhost:3000/combo");
+        const data = await res.json();
+
+        const meal = data.meal;
+        const drink = data.drink;
+
+        document.getElementById("meal").innerHTML = `
+          <h2>${meal.strMeal}</h2>
+          <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+          <p><strong>Categoria:</strong> ${meal.strCategory}</p>
+          <p>${meal.strInstructions.substring(0, 5000)}</p>
+        `;
+
+        document.getElementById("drink").innerHTML = `
+          <h2>${drink.strDrink}</h2>
+          <img src="${drink.strDrinkThumb}" alt="${drink.strDrink}">
+          <p><strong>Categoria:</strong> ${drink.strCategory}</p>
+          <p>${drink.strInstructions.substring(0, 5000)}</p>
+        `;
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao buscar combo!");
+      }
+    }
+
+    // Carrega automaticamente quando abre a página
+    getCombo();
+  </script>
+</body>
+</html>
